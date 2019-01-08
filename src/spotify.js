@@ -22,6 +22,9 @@ module.exports = function (RED) {
                 }
 
                 let params = (msg.params) ? msg.params : [];
+                // Reduce params to 1 less than the function expects, as the last param is the callback
+                params = params.slice(0, spotifyApi[node.api].length - 1);
+
                 spotifyApi[node.api](...params).then(data => {
                     msg.payload = data.body;
                     node.send(msg);
