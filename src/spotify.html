@@ -5,7 +5,8 @@
         icon: 'spotify.png',
         defaults: {
             name: { value: '' },
-            auth: { type: 'spotify-auth', required: true }
+            auth: { type: 'spotify-auth', required: true },
+            api: { type: '' }
         },
         inputs: 1,
         outputs: 1,
@@ -13,7 +14,14 @@
             return this.name || 'Spotify';
         },
         oneditprepare: function () {
+            const node = this;
+            const selectAPI = $('#node-input-api');
 
+            $.getJSON('spotify/apis', function (data) {
+                selectAPI.append(data.map(function(d) {
+                    return $('<option></option>').attr('value', d).attr('selected', node.api === d).text(d).wrap('<p/>').parent().html();
+                }).join(""));
+            });
         }
     });
 </script>
@@ -25,5 +33,10 @@
     <div class="form-row">
         <label for="node-input-auth">Credentials</label>
         <input type="text" id="node-input-auth">
+    </div>
+    <div class="form-row">
+        <label for="node-input-api"><i class="fa fa-wrench"></i> API</label>
+        <select type="text" id="node-input-api">
+        </select>
     </div>
 </script>
