@@ -1,0 +1,29 @@
+<script type="text/javascript">
+    RED.nodes.registerType('spotify', {
+        category: 'function',
+        color: '#ff0000',
+        icon: '',
+        defaults: {
+            name: { value: '' },
+            auth: { type: 'spotify-auth', required: true }
+        },
+        inputs: 1,
+        outputs: 1,
+        label: function () {
+            return this.name || 'Spotify';
+        },
+        oneditprepare: function () {
+
+        }
+    });
+</script>
+<script type="text/x-red" data-template-name="spotify">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-auth">Credentials</label>
+        <input type="text" id="node-input-auth">
+    </div>
+</script>

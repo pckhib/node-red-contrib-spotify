@@ -1,0 +1,114 @@
+<script type="text/javascript">
+    RED.nodes.registerType('spotify-auth', {
+        category: 'config',
+        defaults: {
+            name: { value: '' }
+        },
+        credentials: {
+            name: { type: 'text' },
+            clientId: { type: 'password' },
+            clientSecret: { type: 'password' }
+        },
+        label: function () {
+            return this.name || 'Spotify OAuth2';
+        },
+        oneditprepare: function () {
+            const id = this.id;
+            let pathname = document.location.pathname;
+            if (pathname.slice(-1) != '/') {
+                pathname += '/';
+            }
+            
+            const callback = location.protocol + '//' + 
+                            location.hostname + 
+                            (location.port ? ':' + location.port : '') + 
+                            pathname + 'spotify-credentials/auth/callback';
+
+            function updateSpotifyAuthButton() {
+                const v1 = $('#node-config-input-clientId').val();
+                const v2 = $('#node-config-input-clientSecret').val();
+                $('#node-config-start-auth').toggleClass('disabled', (v1.length === 0 || v2.length === 0));
+            }
+            $('#node-config-input-clientId').on('change keydown paste input', updateSpotifyAuthButton);
+            $('#node-config-input-clientSecret').on('change keydown paste input', updateSpotifyAuthButton);
+
+            function updateSpotifyName(name) {
+                $('#node-config-spotify-client-keys').hide();
+                $('#node-config-spotify').show();
+                $('#node-config-input-name').val(name);
+            }
+
+            function pollSpotifyCredentials() {
+                $.getJSON('credentials/spotify-auth/' + id, function (data) {
+                    if (data.name) {
+                        $('#node-config-dialog-ok').button('enable');
+                        updateSpotifyName(data.name);
+                        delete window.spotifyConfigNodeIntervalId;
+                    } else {
+                        window.spotifyConfigNodeIntervalId = window.setTimeout(pollSpotifyCredentials, 2000);
+                    }
+                });
+            }
+
+            updateSpotifyAuthButton();
+
+            if (this.name) {
+                updateSpotifyName(this.name);
+            } else {
+                $('#node-config-spotify-client-keys').show();
+                $('#node-config-spotify').hide();
+                $('#node-config-dialog-ok').button('disable');
+            }
+
+            $('#node-config-start-auth').mousedown(function () {
+                const clientId = $('#node-config-input-clientId').val();
+                const clientSecret = $('#node-config-input-clientSecret').val();
+
+                const url = 'spotify-credentials/auth?id=' + id + '&clientId=' + clientId + "&clientSecret=" + clientSecret + "&callback=" + encodeURIComponent(callback);
+                $(this).attr('href', url);
+                window.spotifyConfigNodeIntervalId = window.setTimeout(pollSpotifyCredentials, 2000);
+            });
+            $('#node-config-start-auth').click(function (e) {
+                const clientId = $('#node-config-input-clientId').val();
+                const clientSecret = $('#node-config-input-clientSecret').val();
+                if (clientId === "" || clientSecret === "") {
+                    e.preventDefault();
+                }
+            });
+        },
+        oneditsave: function () {
+            if (window.spotifyConfigNodeIntervalId) {
+                window.clearTimeout(window.spotifyConfigNodeIntervalId);
+                delete window.spotifyConfigNodeIntervalId;
+            }
+        },
+        oneditcancel: function () {
+            if (window.spotifyConfigNodeIntervalId) {
+                window.clearTimeout(window.spotifyConfigNodeIntervalId);
+                delete window.spotifyConfigNodeIntervalId;
+            }
+        }
+    });
+</script>
+<script type="text/x-red" data-template-name="spotify-auth">
+    <div id="node-config-spotify-client-keys">
+            <div class="form-row">
+                <label for="node-config-input-clientId">Client ID</label>
+                <input type="password" id="node-config-input-clientId">
+            </div>
+            <div class="form-row">
+                <label for="node-config-input-clientSecret">Client secret</label>
+                <input type="password" id="node-config-input-clientSecret">
+            </div>
+            <div class="form-row">
+                <label>&nbsp;</label>
+                <a class="btn" id="node-config-start-auth" href="#" target="_blank">Start Authentication</a>
+            </div>
+    </div>
+    <div id="node-config-spotify">
+        <div class="form-row">
+            <label for="node-config-input-name">Name</label>
+            <input type="text" id="node-config-input-name">
+        </div>
+    </div>
+</script>
