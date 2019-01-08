@@ -2,7 +2,8 @@
     RED.nodes.registerType('spotify-auth', {
         category: 'config',
         defaults: {
-            name: { value: '' }
+            name: { value: '' },
+            scope: { value: '', required: true }
         },
         credentials: {
             name: { type: 'text' },
@@ -63,8 +64,10 @@
             $('#node-config-start-auth').mousedown(function () {
                 const clientId = $('#node-config-input-clientId').val();
                 const clientSecret = $('#node-config-input-clientSecret').val();
+                let scope = $("#node-config-input-scope").val();
+                scope = scope.replace(/\n/g, "%20");
 
-                const url = 'spotify-credentials/auth?id=' + id + '&clientId=' + clientId + "&clientSecret=" + clientSecret + "&callback=" + encodeURIComponent(callback);
+                const url = 'spotify-credentials/auth?id=' + id + '&clientId=' + clientId + "&clientSecret=" + clientSecret + "&scope=" + scope + "&callback=" + encodeURIComponent(callback);
                 $(this).attr('href', url);
                 window.spotifyConfigNodeIntervalId = window.setTimeout(pollSpotifyCredentials, 2000);
             });
@@ -99,6 +102,10 @@
             <div class="form-row">
                 <label for="node-config-input-clientSecret">Client secret</label>
                 <input type="password" id="node-config-input-clientSecret">
+            </div>
+            <div class="form-row">
+                <label for="node-config-input-scopes"><i class="fa fa-fw fa-list"></i> Scopes</label>
+                <textarea id="node-config-input-scope" rows="10" style="width: 100%"></textarea>
             </div>
             <div class="form-row">
                 <label>&nbsp;</label>

@@ -8,6 +8,7 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config);
 
         this.name = config.name;
+        this.scope = config.scope;
     }
     RED.nodes.registerType("spotify-auth", AuthNode, {
         credentials: {
@@ -33,6 +34,7 @@ module.exports = function (RED) {
             clientSecret: req.query.clientSecret,
             callback: req.query.callback
         };
+        const scope = req.query.scope;
         const csrfToken = crypto.randomBytes(18).toString('base64').replace(/\//g, '-').replace(/\+/g, '_');
         credentials.csrfToken = csrfToken;
 
@@ -46,7 +48,7 @@ module.exports = function (RED) {
                 redirect_uri: credentials.callback,
                 state: node_id + ':' + csrfToken,
                 show_dialog: true,
-                scope: 'user-read-private user-read-email user-read-currently-playing'
+                scope: scope
             }
         }));
         RED.nodes.addCredentials(node_id, credentials);
