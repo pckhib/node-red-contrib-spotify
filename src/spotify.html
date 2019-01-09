@@ -40,3 +40,41 @@
         </select>
     </div>
 </script>
+<script type="text/x-red" data-help-name="spotify">
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>params <span class="property-type">array</span></dt>
+        <dd>Array that contains all required arguments for the selected API function.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+     <ol class="node-ports">
+         <li>Standard output
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">Object</span></dt>
+                 <dd>Object that contains the result of the API call.</dd>
+             </dl>
+         </li>
+         <li>Standard error
+             <dl class="message-properties">
+                 <dt>error <span class="property-type">string</span></dt>
+                 <dd>Shows error information.</dd>
+             </dl>
+         </li>
+     </ol>
+
+    <h3>Details</h3>
+    <p><code>msg.params</code> is used to define all required arguments for the specifed API call.
+    It needs to be defined as an array. The order of the entries inside the array matches the order 
+    of the arguments for each function. For an overview about each API function check out the 
+    <a href="https://github.com/thelinmichael/spotify-web-api-node/blob/master/src/spotify-web-api.js" target="_blank">API description</a><br/><br/>
+    Example:<br/>
+    <code>
+        // API function: getArtistAlbums<br/>
+        msg.params = [<br/>
+            '43ZHCT0cAZBISjO8DG9PnE', /* Artist ID */<br/>
+            { limit: 10, offset: 20 } /* Options */<br/>
+        ];
+    </code>
+    </p>
+ </script>
