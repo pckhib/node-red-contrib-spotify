@@ -24,10 +24,17 @@ yarn add node-red-contrib-spotify
 
 1. Head to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications).
 2. Create a new application by selecting `CREATE A CLIENT ID`
-3. Select the created application and copy the `Client ID` and `Client Secret`.
-4. Paste the Client ID and Client Secret in the Spotify Config node in Node-RED.
-5. Enter the required scopes. A list of all available scopes can be found on the [Authorization Scopes](https://developer.spotify.com/documentation/general/guides/scopes/) page.
-6. Press `Start Authentication` and allow the access for your Spotify account.
+3. Select the created application, click `EDIT SETTINGS` and add a new `Redirect URI`.
+   ```
+   <node-red-ip:port>/spotify-credentials/auth/callback
+   
+   // e.g. if you're running node-red on localhost
+   http://localhost:1880/spotify-credentials/auth/callback
+   ```
+4. Click save and copy the `Client ID` and `Client Secret`.
+5. Paste the Client ID and Client Secret in the Spotify Config node in Node-RED.
+6. Enter the required scopes. A list of all available scopes can be found on the [Authorization Scopes](https://developer.spotify.com/documentation/general/guides/scopes/) page.
+7. Press `Start Authentication` and allow the access for your Spotify account.
 
 ### Usage
 
