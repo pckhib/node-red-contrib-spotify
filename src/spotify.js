@@ -15,12 +15,18 @@ module.exports = function (RED) {
             refreshToken: node.config.credentials.refreshToken
         });
 
-        node.on('input', async function (msg) {
-            try {
-                if ((new Date().getTime() / 1000) > node.config.credentials.expireTime) {
-                    await refreshToken();
-                }
+        node.on('input', function (msg) {
+            if ((new Date().getTime() / 1000) > node.config.credentials.expireTime) {
+                refreshToken().then(() => {
+                    handleInput(msg);
+                });
+            } else {
+                handleInput(msg);
+            }
+        });
 
+        function handleInput(msg) {
+            try {
                 let params = (msg.params) ? msg.params : [];
                 // Reduce params to 1 less than the function expects, as the last param is the callback
                 params = params.slice(0, spotifyApi[node.api].length - 1);
@@ -36,7 +42,7 @@ module.exports = function (RED) {
                 msg.err = err;
                 node.send(msg);
             }
-        });
+        }
 
         function refreshToken() {
             return new Promise((resolve, reject) => {
