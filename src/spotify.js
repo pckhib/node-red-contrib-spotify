@@ -21,6 +21,7 @@ module.exports = function (RED) {
                     handleInput(msg);
                 });
             } else {
+                spotifyApi.setAccessToken(node.config.credentials.accessToken);
                 handleInput(msg);
             }
         });
