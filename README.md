@@ -49,3 +49,17 @@ msg.params = [
     { limit: 10, offset: 20 } /* Options */
 ];
 ```
+
+## For Home Assistance users
+
+TensE wrote:  So I seem to have figured it out after a bunch of searching. Here’s what I’ve done:
+
+1. Setup the Spotify Dashboard.
+1. Get Client ID and Secret and put them in NodeRED (+ your scopes) and press Start Authentication.
+1. Most likely the INVALID_CLIENT page will come up so copy the URL and decode it.
+1. Find the URL between redirect_uri=<link_here>&state (should look something like 
+`http://<your-ha-IP>:8123/api/hassio_ingress/<bunch-of-junk>/spotify-credentials/auth/callback)`
+1. In Spotify Dashboard edit your application and put that link as the Redirect URI
+1. Press Start Authentication in NodeRED again it should bring you to the permissions page where you click AGREE
+1. It will then probably open a page with 401: Unauthorized error. Select the URL and press Enter to open it again. (Don’t F5 as that doesn’t work)
+1. You should now get spotify.authorized
