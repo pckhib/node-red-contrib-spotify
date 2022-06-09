@@ -33,7 +33,7 @@ yarn add node-red-contrib-spotify
    ```
 4. Click save and copy the `Client ID` and `Client Secret`.
 5. Paste the Client ID and Client Secret in the Spotify Config node in Node-RED.
-6. Enter the required scopes. A list of all available scopes can be found on the [Authorization Scopes](https://developer.spotify.com/documentation/general/guides/scopes/) page.
+6. Enter the required scopes. A list of all available scopes can be found on the [Authorization Scopes](https://developer.spotify.com/documentation/general/guides/authorization/scopes/) page.
 7. Press `Start Authentication` and allow the access for your Spotify account.
 
 ### Usage
